@@ -1,0 +1,10 @@
+{
+  "id": "example.sample",
+  "name": "BEE2.5 Sample Package",
+  "version": "1.0.0",
+  "content": [
+    "items",
+    "instances",
+    "resources"
+  ]
+}
