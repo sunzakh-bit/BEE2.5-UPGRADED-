@@ -86,7 +86,7 @@ class PackageManager:
             "version": version,
             "content": ["items", "styles", "skyboxes", "maps", "materials", "models", "sounds"],
         }
-        manifest = parse_manifest(manifest_data)
+        parse_manifest(manifest_data)
         destination = self.root / package_id
         if destination.exists():
             raise FileExistsError(f"package '{package_id}' is already installed")
