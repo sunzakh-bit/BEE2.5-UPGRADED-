@@ -99,6 +99,9 @@ class BEE25App:
         ttk.Button(buttons, text="Import VMF as package…", command=self.import_vmf).pack(
             side="left", padx=8
         )
+        ttk.Button(
+            buttons, text="Import ZIP…", command=self.import_package_archive
+        ).pack(side="left")
         ttk.Button(buttons, text="Refresh", command=self.refresh_packages).pack(side="right")
 
         self.package_status = ttk.Label(
@@ -226,6 +229,21 @@ class BEE25App:
             return
         try:
             package = self.packages.install_package(Path(folder))
+        except Exception as exc:
+            messagebox.showerror("Package import failed", str(exc))
+            return
+        self.refresh_packages()
+        messagebox.showinfo("Package imported", f"Installed {package.manifest.name}")
+
+    def import_package_archive(self) -> None:
+        filename = filedialog.askopenfilename(
+            title="Select BEE2.5 ZIP package",
+            filetypes=[("ZIP package", "*.zip"), ("All files", "*.*")],
+        )
+        if not filename:
+            return
+        try:
+            package = self.packages.install_package_archive(Path(filename))
         except Exception as exc:
             messagebox.showerror("Package import failed", str(exc))
             return
