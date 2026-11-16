@@ -6,12 +6,11 @@ import json
 import os
 import re
 import shutil
-import tempfile
 import stat
+import tempfile
 import zipfile
-from pathlib import PurePosixPath
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 from bee25.packages.manifest import ManifestError, PackageManifest, load_manifest, parse_manifest
 from bee25.packages.vmf import VMFInfo, inspect_vmf
