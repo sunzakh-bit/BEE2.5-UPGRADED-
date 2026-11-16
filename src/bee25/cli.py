@@ -23,6 +23,11 @@ def build_parser() -> argparse.ArgumentParser:
     create.add_argument("--name", required=True)
     create.add_argument("--version", default="1.0.0")
 
+    install = subparsers.add_parser(
+        "install-package", help="Install a BEE2.5 package folder or ZIP archive"
+    )
+    install.add_argument("source", type=Path)
+
     validate = subparsers.add_parser(
         "validate-package", help="Validate a package's bee25.json manifest"
     )
@@ -68,6 +73,18 @@ def main() -> int:
             print(f"Could not create package: {exc}", file=sys.stderr)
             return 1
         print(f"Created package: {package.path}")
+        return 0
+
+    if args.command == "install-package":
+        try:
+            if args.source.is_dir():
+                package = PackageManager().install_package(args.source)
+            else:
+                package = PackageManager().install_package_archive(args.source)
+        except (ValueError, OSError, ManifestError) as exc:
+            print(f"Could not install package: {exc}", file=sys.stderr)
+            return 1
+        print(f"Installed {package.manifest.name} ({package.manifest.package_id})")
         return 0
 
     if args.command == "validate-package":
