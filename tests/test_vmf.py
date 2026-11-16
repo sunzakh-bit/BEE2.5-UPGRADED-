@@ -1,6 +1,5 @@
-from pathlib import Path
-
 import pytest
+from pathlib import Path
 
 from bee25.packages.vmf import VMFError, inspect_vmf, validate_vmf_text
 
