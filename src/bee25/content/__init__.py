@@ -1,0 +1,1 @@
+"""Built-in content presets for BEE2.5."""
