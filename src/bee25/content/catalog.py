@@ -23,4 +23,4 @@ BUILTIN_VOICES: tuple[dict[str, str], ...] = (
     {"id": "announcer_bts", "name": "Announcer (BTS)"},
 )
 
-DEFAULT_SKYBOX = {"id": "game_default", "name": "Game default"}
+DEFAULT_SKYBOX = {"id": "sky_black", "name": "Black (Portal 2 default)"}
