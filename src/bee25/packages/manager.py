@@ -7,6 +7,9 @@ import os
 import re
 import shutil
 import tempfile
+import stat
+import zipfile
+from pathlib import PurePosixPath
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -66,6 +69,52 @@ class PackageManager:
         finally:
             shutil.rmtree(temporary, ignore_errors=True)
         return InstalledPackage(manifest, destination)
+
+    def install_package_archive(self, archive_path: Path) -> InstalledPackage:
+        """Safely install a BEE2.5 package archive containing bee25.json.
+
+        This currently supports ZIP archives using the BEE2.5 manifest format.
+        Legacy BEE2.4 .bee_pack files need a separate compatibility importer.
+        """
+        archive_path = archive_path.expanduser().resolve()
+        if not archive_path.is_file() or archive_path.suffix.lower() != ".zip":
+            raise ValueError("select a .zip archive containing a BEE2.5 bee25.json manifest")
+
+        temporary = Path(tempfile.mkdtemp(prefix=".bee25-archive-", dir=self.root))
+        try:
+            with zipfile.ZipFile(archive_path) as archive:
+                total_size = 0
+                for entry in archive.infolist():
+                    raw_name = entry.filename
+                    member = PurePosixPath(raw_name)
+                    if (
+                        not raw_name
+                        or "\\" in raw_name
+                        or member.is_absolute()
+                        or ".." in member.parts
+                        or (member.parts and ":" in member.parts[0])
+                    ):
+                        raise ValueError(f"unsafe archive path: {raw_name!r}")
+                    mode = (entry.external_attr >> 16) & 0o170000
+                    if mode == stat.S_IFLNK:
+                        raise ValueError(f"symbolic links are not allowed: {raw_name}")
+                    total_size += entry.file_size
+                    if total_size > 512 * 1024 * 1024:
+                        raise ValueError("package archive exceeds the 512 MiB unpacked size limit")
+                archive.extractall(temporary)
+
+            package_root = temporary
+            if not (package_root / "bee25.json").is_file():
+                folders = [item for item in temporary.iterdir() if item.is_dir()]
+                if len(folders) == 1 and (folders[0] / "bee25.json").is_file():
+                    package_root = folders[0]
+            if not (package_root / "bee25.json").is_file():
+                raise ValueError("archive does not contain bee25.json at its package root")
+            return self.install_package(package_root)
+        except zipfile.BadZipFile as exc:
+            raise ValueError("the selected file is not a valid ZIP archive") from exc
+        finally:
+            shutil.rmtree(temporary, ignore_errors=True)
 
     def create_vmf_package(
         self,
