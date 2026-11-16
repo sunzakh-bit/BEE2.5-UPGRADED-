@@ -70,6 +70,42 @@ class PackageManager:
             shutil.rmtree(temporary, ignore_errors=True)
         return InstalledPackage(manifest, destination)
 
+    def create_package(
+        self,
+        package_id: str,
+        name: str,
+        version: str = "1.0.0",
+    ) -> InstalledPackage:
+        """Create a new editable package with standard content directories."""
+        if not _ID_PATTERN.fullmatch(package_id):
+            raise ValueError("package ID must be 2-64 lowercase letters, digits, '.', '_' or '-'")
+        if not name.strip():
+            raise ValueError("package name cannot be empty")
+        manifest_data = {
+            "id": package_id,
+            "name": name.strip(),
+            "version": version,
+            "content": ["items", "styles", "skyboxes", "maps", "materials", "models", "sounds"],
+        }
+        manifest = parse_manifest(manifest_data)
+        destination = self.root / package_id
+        if destination.exists():
+            raise FileExistsError(f"package '{package_id}' is already installed")
+
+        temporary = Path(tempfile.mkdtemp(prefix=".bee25-new-", dir=self.root))
+        staged = temporary / package_id
+        try:
+            staged.mkdir()
+            for folder in ("items", "styles", "skyboxes", "maps", "materials", "models", "sounds", "resources"):
+                (staged / folder).mkdir()
+            (staged / "bee25.json").write_text(
+                json.dumps(manifest_data, indent=2) + "\\n", encoding="utf-8"
+            )
+            shutil.move(str(staged), destination)
+        finally:
+            shutil.rmtree(temporary, ignore_errors=True)
+        return InstalledPackage(load_manifest(destination), destination)
+
     def install_package_archive(self, archive_path: Path) -> InstalledPackage:
         """Safely install a BEE2.5 package archive containing bee25.json.
 
