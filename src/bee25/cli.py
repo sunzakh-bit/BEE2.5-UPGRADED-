@@ -47,7 +47,7 @@ def build_parser() -> argparse.ArgumentParser:
     export.add_argument("portal2_directory", type=Path)
     export.add_argument("--map-name")
     export.add_argument("--style", default="clean")
-    export.add_argument("--skybox", default="game_default")
+    export.add_argument("--skybox", default="sky_black")
     export.add_argument("--voice", default="glados")
     return parser
 
