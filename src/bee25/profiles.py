@@ -35,7 +35,9 @@ class ProfileStore:
             if isinstance(item, dict) and isinstance(item.get("id"), str)
         ]
 
-    def add_style(self, profile_id: str, name: str, base_id: str, description: str = "") -> dict[str, str]:
+    def add_style(
+        self, profile_id: str, name: str, base_id: str, description: str = ""
+    ) -> dict[str, str]:
         if base_id not in {item["id"] for item in BUILTIN_STYLES}:
             raise ValueError("custom styles must declare a supported built-in base style")
         return self._add(
