@@ -53,6 +53,7 @@ bee25 gui
 ## Useful commands
 
 ```bash
+bee25 create-package --id author.my_pack --name "My Package"
 bee25 validate-package examples/sample_package
 bee25 install-package path/to/package-folder
 bee25 install-package path/to/package.zip
@@ -66,6 +67,7 @@ bee25 export-vmf path/to/map.vmf "C:/Program Files (x86)/Steam/steamapps/common/
 - [Roadmap](docs/ROADMAP.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Package format](docs/PACKAGE_FORMAT.md)
+- [Export notes](docs/EXPORT.md)
 - [Contributing](CONTRIBUTING.md)
 
 Portal 2 is a product of Valve. BEE2.5 is an independent community project and is not affiliated with or endorsed by Valve. Do not redistribute proprietary game assets or content without permission.
