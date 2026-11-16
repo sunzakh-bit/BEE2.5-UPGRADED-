@@ -98,7 +98,7 @@ class PackageManager:
             for folder in ("items", "styles", "skyboxes", "maps", "materials", "models", "sounds", "resources"):
                 (staged / folder).mkdir()
             (staged / "bee25.json").write_text(
-                json.dumps(manifest_data, indent=2) + "\\n", encoding="utf-8"
+                json.dumps(manifest_data, indent=2) + "\n", encoding="utf-8"
             )
             shutil.move(str(staged), destination)
         finally:
