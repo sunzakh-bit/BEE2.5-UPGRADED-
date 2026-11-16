@@ -2,35 +2,34 @@
 
 BEE2.5 is an independent community project aiming to modernize the workflow around Portal 2's Puzzle Maker, building on ideas and lessons from [BEE2.4](https://github.com/BEEmod/BEE2.4).
 
-> **Development status: early development.** BEE2.5 is not yet a complete or compatible replacement for BEE2.4. The current build has a desktop UI, package tooling, a basic VMF importer, preset selectors, and a VMF-to-BSP export path.
+> **Development status: experimental.** The desktop shell, package handling, VMF inspection/import, preset metadata, and a basic VMF-to-BSP compiler wrapper exist. This is not yet a complete BEE2.4 replacement and does not yet inject BEE2 items or apply styles/voices inside Puzzle Maker.
 
 ## Current features
 
-- Tkinter desktop application with Packages, Presets, and Export tabs.
-- Install BEE2.5 package folders and ZIP archives containing `bee25.json`.
-- Create a personal package from a VMF file.
-- Basic VMF text validation and map summary.
-- Selectable style presets: Clean, Original Clean, BTS, Wheatley Style, Overgrown Style, Underground Style, Destroyed Style, and Vactube Style.
-- User-defined style entries based on a built-in style.
-- Game-default and user-defined skybox material profiles.
-- Voice preset selectors: GLaDOS, Announcer (Apocalypse), Wheatley (Core), Wheatley (GLaDOS Wheatley), and Announcer (BTS).
-- Compile a VMF using Portal 2's VBSP, VVIS, and VRAD tools and copy the BSP into `portal2/maps`.
+- Desktop UI launched with `bee25 gui`.
+- Install a BEE2.5 package from a folder or ZIP archive.
+- Create a local map package from a VMF file.
+- Basic VMF structure inspection (not a full Hammer validation).
+- Select built-in style labels: Clean, Original Clean, BTS, Wheatley Style, Overgrown, Underground, Destroyed, and Vactube.
+- Add custom style presets based on one of the built-in styles.
+- Add custom skybox presets by specifying a material path.
+- Select voice preset labels: GLaDOS, Announcer (Apocalypse), Wheatley (Core), Wheatley (GLaDOS Wheatley), and Announcer (BTS).
+- Compile a VMF using Portal 2 VBSP/VVIS/VRAD tools and copy the resulting BSP into `portal2/maps`, when those tools are installed and configured.
 
-## Not implemented yet
+## Important limitations
 
-- Applying BEE2.5 styles, skyboxes, or voice packs to Puzzle Maker exports.
-- Full BEE2.4 `.bee_pack` compatibility.
-- Loading legacy BEE2.4 package definitions and assets.
-- Custom voice asset/choreography integration.
-- Full Puzzle Maker item, instance, and resource compiler.
-
-The selected preset IDs are currently recorded in a sidecar `.bee25.json` file beside the exported BSP. They do not yet change the compiled map.
+- Style, skybox, and voice selections are currently saved as BEE2.5 metadata. They are **not yet applied** to the compiled BSP or Puzzle Maker.
+- A custom style currently inherits a built-in style ID; a full style resource editor is still planned.
+- A custom skybox entry stores a material path. It does not create the VMT/VTF assets.
+- Voice choices are selectable labels only. Custom sound import and in-game voice replacement are not implemented.
+- VMF validation is deliberately basic; use Hammer/Source tools to validate map geometry and entities.
+- Legacy BEE2.4 `.bee_pack` files are not yet supported. BEE2.5 currently uses its own `bee25.json` package format.
 
 ## Requirements
 
 - Python 3.11 or newer.
-- Tkinter (included with most standard Python installations; some Linux distributions package it separately).
-- Portal 2 installation with the Source compile tools `vbsp`, `vvis`, and `vrad` for map export.
+- Tkinter for the desktop interface (usually included with standard Windows Python).
+- Portal 2 and its VBSP/VVIS/VRAD tools for map compilation.
 
 ## Setup
 
@@ -45,46 +44,28 @@ python -m pip install -e ".[dev]"
 python -m pytest
 ```
 
-## Launch the desktop application
+## Launch the UI
 
 ```bash
 bee25 gui
 ```
 
-Or:
+## Useful commands
 
 ```bash
-python -m bee25.ui.app
-```
-
-## Command line
-
-```bash
-bee25 validate-package path/to/package
+bee25 validate-package examples/sample_package
+bee25 install-package path/to/package-folder
+bee25 install-package path/to/package.zip
 bee25 inspect-vmf path/to/map.vmf
-bee25 import-vmf path/to/map.vmf --id author.map --name "My Map"
-bee25 export-vmf path/to/map.vmf "C:/Games/Portal 2"
+bee25 import-vmf path/to/map.vmf --id my.map --name "My Map"
+bee25 export-vmf path/to/map.vmf "C:/Program Files (x86)/Steam/steamapps/common/Portal 2"
 ```
 
-## Package layout
+## Documentation
 
-A package directory or ZIP archive has a `bee25.json` manifest at its root:
+- [Roadmap](docs/ROADMAP.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Package format](docs/PACKAGE_FORMAT.md)
+- [Contributing](CONTRIBUTING.md)
 
-```text
-my_package/
-  bee25.json
-  maps/
-    my_map.vmf
-  materials/
-    ...
-  models/
-    ...
-  sounds/
-    ...
-```
-
-See [Package format](docs/PACKAGE_FORMAT.md), [Architecture](docs/ARCHITECTURE.md), [Export notes](docs/EXPORT.md), and [Roadmap](docs/ROADMAP.md).
-
-## Legal note
-
-Portal 2 is a product of Valve. This project is not affiliated with or endorsed by Valve. Do not include proprietary game assets or content you do not have permission to redistribute.
+Portal 2 is a product of Valve. BEE2.5 is an independent community project and is not affiliated with or endorsed by Valve. Do not redistribute proprietary game assets or content without permission.
