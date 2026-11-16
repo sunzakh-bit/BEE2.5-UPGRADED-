@@ -96,6 +96,9 @@ class BEE25App:
         ttk.Button(
             buttons, text="Import package folder…", command=self.import_package
         ).pack(side="left")
+        ttk.Button(
+            buttons, text="New package…", command=self.create_package
+        ).pack(side="left", padx=(8, 0))
         ttk.Button(buttons, text="Import VMF as package…", command=self.import_vmf).pack(
             side="left", padx=8
         )
@@ -222,6 +225,31 @@ class BEE25App:
             )
         if not packages:
             self.package_list.insert("end", "No packages installed yet.")
+
+    def create_package(self) -> None:
+        name = simpledialog.askstring("New package", "Package display name:", parent=self.root)
+        if not name:
+            return
+        default_id = "".join(
+            char.lower() if char.isalnum() else "_" for char in name
+        ).strip("_") or "my_package"
+        package_id = simpledialog.askstring(
+            "Package ID", "Unique lowercase package ID:",
+            initialvalue=default_id[:64],
+            parent=self.root,
+        )
+        if not package_id:
+            return
+        try:
+            package = self.packages.create_package(package_id, name)
+        except Exception as exc:
+            messagebox.showerror("Could not create package", str(exc))
+            return
+        self.refresh_packages()
+        messagebox.showinfo(
+            "Package created",
+            f"Created {package.manifest.name} at:\\n{package.path}",
+        )
 
     def import_package(self) -> None:
         folder = filedialog.askdirectory(title="Select a BEE2.5 package folder")
