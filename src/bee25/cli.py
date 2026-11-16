@@ -18,6 +18,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     subparsers.add_parser("gui", help="Launch the desktop interface")
 
+    create = subparsers.add_parser("create-package", help="Create an editable package scaffold")
+    create.add_argument("--id", required=True, dest="package_id")
+    create.add_argument("--name", required=True)
+    create.add_argument("--version", default="1.0.0")
+
     validate = subparsers.add_parser(
         "validate-package", help="Validate a package's bee25.json manifest"
     )
@@ -52,6 +57,17 @@ def main() -> int:
         except ImportError as exc:
             print(f"Could not launch desktop UI: {exc}", file=sys.stderr)
             return 1
+        return 0
+
+    if args.command == "create-package":
+        try:
+            package = PackageManager().create_package(
+                args.package_id, args.name, args.version
+            )
+        except (ValueError, OSError, ManifestError) as exc:
+            print(f"Could not create package: {exc}", file=sys.stderr)
+            return 1
+        print(f"Created package: {package.path}")
         return 0
 
     if args.command == "validate-package":
