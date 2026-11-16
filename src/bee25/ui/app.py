@@ -242,7 +242,7 @@ class BEE25App:
             return
         try:
             package = self.packages.create_package(package_id, name)
-        except Exception as exc:
+        except (ValueError, OSError) as exc:
             messagebox.showerror("Could not create package", str(exc))
             return
         self.refresh_packages()
@@ -257,7 +257,7 @@ class BEE25App:
             return
         try:
             package = self.packages.install_package(Path(folder))
-        except Exception as exc:
+        except (ValueError, OSError) as exc:
             messagebox.showerror("Package import failed", str(exc))
             return
         self.refresh_packages()
@@ -272,7 +272,7 @@ class BEE25App:
             return
         try:
             package = self.packages.install_package_archive(Path(filename))
-        except Exception as exc:
+        except (ValueError, OSError) as exc:
             messagebox.showerror("Package import failed", str(exc))
             return
         self.refresh_packages()
@@ -308,7 +308,7 @@ class BEE25App:
         except (ValueError, OSError, VMFError) as exc:
             messagebox.showerror("VMF import failed", str(exc))
             return
-        except Exception as exc:
+        except (ValueError, OSError) as exc:
             messagebox.showerror("VMF import failed", str(exc))
             return
         self.refresh_packages()
@@ -372,7 +372,7 @@ class BEE25App:
             return
         try:
             self.profiles.add_style(profile_id, name, base_id)
-        except Exception as exc:
+        except (ValueError, OSError) as exc:
             messagebox.showerror("Could not add style", str(exc))
             return
         self.refresh_presets()
@@ -393,7 +393,7 @@ class BEE25App:
             return
         try:
             self.profiles.add_skybox(profile_id, name, material)
-        except Exception as exc:
+        except (ValueError, OSError) as exc:
             messagebox.showerror("Could not add skybox", str(exc))
             return
         self.refresh_presets()
