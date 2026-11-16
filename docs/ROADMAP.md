@@ -11,6 +11,7 @@ BEE2.5 is experimental. Checkboxes describe repository work, not compatibility g
 - [x] Discover installed BEE2.5 packages
 - [x] Install packages from folders
 - [x] Install BEE2.5 ZIP package archives with path checks
+- [x] Create editable package scaffolds from the UI and CLI
 - [x] Import a VMF into a local map package
 - [x] Basic VMF structural inspection
 - [ ] Full VMF/Hammer validation and asset dependency scanning
