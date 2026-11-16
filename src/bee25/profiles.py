@@ -5,10 +5,8 @@ from __future__ import annotations
 import json
 import re
 from pathlib import Path
-from typing import Any
-
 from bee25.packages.manager import user_data_dir
-from bee25.content.catalog import BUILTIN_STYLES, DEFAULT_SKYBOX
+from bee25.content.catalog import BUILTIN_STYLES
 
 _PROFILE_ID = re.compile(r"^[a-z0-9][a-z0-9_.-]{1,63}$")
 _ALLOWED_KINDS = {"styles", "skyboxes"}
