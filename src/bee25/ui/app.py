@@ -26,9 +26,9 @@ class BEE25App:
         self.vmf_path = tk.StringVar()
         self.game_path = tk.StringVar()
         self.map_name = tk.StringVar()
-        self.style_id = tk.StringVar(value=BUILTIN_STYLES[0]["id"])
-        self.skybox_id = tk.StringVar(value=DEFAULT_SKYBOX["id"])
-        self.voice_id = tk.StringVar(value=BUILTIN_VOICES[0]["id"])
+        self.style_id = tk.StringVar()
+        self.skybox_id = tk.StringVar()
+        self.voice_id = tk.StringVar()
         self._style_values: dict[str, str] = {}
         self._skybox_values: dict[str, str] = {}
         self._voice_values: dict[str, str] = {}
@@ -288,22 +288,15 @@ class BEE25App:
             (self.voice_combo, self._voice_values),
         ):
             combo["values"] = list(values.keys())
-        self._set_combo_by_id(self.style_combo, self.style_id, self._style_values)
-        self._set_combo_by_id(self.skybox_combo, self.skybox_id, self._skybox_values)
-        self._set_combo_by_id(self.voice_combo, self.voice_id, self._voice_values)
+        self._set_combo_first(self.style_combo)
+        self._set_combo_first(self.skybox_combo)
+        self._set_combo_first(self.voice_combo)
 
     @staticmethod
-    def _set_combo_by_id(
-        combo: ttk.Combobox, variable: tk.StringVar, values: dict[str, str]
-    ) -> None:
-        for name, preset_id in values.items():
-            if preset_id == variable.get():
-                combo.set(name)
-                return
+    def _set_combo_first(combo: ttk.Combobox) -> None:
+        values = list(combo["values"])
         if values:
-            name, preset_id = next(iter(values.items()))
-            variable.set(preset_id)
-            combo.set(name)
+            combo.set(values[0])
 
     def _selected_id(self, combo: ttk.Combobox, values: dict[str, str]) -> str:
         return values.get(combo.get(), "")
