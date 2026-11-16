@@ -10,7 +10,7 @@ import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
-from bee25.packages.manifest import ManifestError, PackageManifest, load_manifest
+from bee25.packages.manifest import ManifestError, PackageManifest, load_manifest, parse_manifest
 from bee25.packages.vmf import VMFInfo, inspect_vmf
 
 _ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9_.-]{1,63}$")
@@ -95,6 +95,8 @@ class PackageManager:
                 "content": ["maps"],
                 "kind": "vmf_map",
             }
+            # Validate generated metadata before moving it into the installed package store.
+            parse_manifest(manifest_data)
             (staged / "bee25.json").write_text(
                 json.dumps(manifest_data, indent=2) + "\n", encoding="utf-8"
             )
