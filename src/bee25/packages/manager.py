@@ -95,7 +95,10 @@ class PackageManager:
         staged = temporary / package_id
         try:
             staged.mkdir()
-            for folder in ("items", "styles", "skyboxes", "maps", "materials", "models", "sounds", "resources"):
+            for folder in (
+                "items", "styles", "skyboxes", "maps",
+                "materials", "models", "sounds", "resources",
+            ):
                 (staged / folder).mkdir()
             (staged / "bee25.json").write_text(
                 json.dumps(manifest_data, indent=2) + "\n", encoding="utf-8"
